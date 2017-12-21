@@ -2,6 +2,7 @@
 FROM        debian:wheezy
 MAINTAINER  Rohit Gupta
 
+RUN dpkg --add-architecture i386
 # Install Shinken, Nagios plugins, apache2 and supervisord
 RUN         apt-get update && apt-get install -y python-pip \
                 python-pycurl \
@@ -14,7 +15,10 @@ RUN         apt-get update && apt-get install -y python-pip \
                 libssl-dev \
                 python-crypto \
                 inotify-tools \
-                ntp
+                ntp\
+                wget
+                # Install setuptools, pip, virtualenv, wheel and httpie for Python2
+RUN wget https://bootstrap.pypa.io/get-pip.py -O - | python
 RUN         useradd --create-home shinken && \
                 pip install shinken && \
                 update-rc.d -f apache2 remove && \
